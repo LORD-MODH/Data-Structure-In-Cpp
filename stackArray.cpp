@@ -2,82 +2,91 @@
 using namespace std;
 
 class stack {
-	private:
-		int top, cap, * arr;
-	public :
-		stack(int s) {
-			top = -1;
-			cap = s;
-			arr = new int[s];
-			for (int i = 0; i < cap; i++) {
-				arr[i] = 0;
-			}
+private:
+	int top, * arr, cap;
+public:
+	stack(int n) {
+		top = -1;
+		cap = n;
+		arr = new int[cap];
+		for (int i = 0; i < cap; i++) {
+			arr[i] = 0;
 		}
-		
-		~stack() {
-			delete[] arr;
+	}
+	
+	~stack() {
+		delete[] arr;
+	}
+	
+	bool isfull() {
+		if (top == cap - 1) return true; else return false;
+	}
+	
+	void push(int v) {
+		if (isfull()) {
+			cout << "overflow"; return;
 		}
-		
-		bool isfull() {
-			if (top == cap - 1) return 1;
-			else return 0;
+		arr[++top] = v;
+	}
+	
+	void pop() {
+		if (top == -1) {
+			cout << "underflow"; return;
 		}
-		
-		bool isempty() {
-			if (top ==-1) return 1;
-			else return 0;
+		top = top - 1;
+	}
+	
+	void peek() {
+		if (top == -1) {
+			cout << "underflow"; return;
 		}
-		
-		void push(int value) {
-			if (isfull()) cout << "overflow";
-			else {
-				arr[++top] = value;
-			}
+		cout << arr[top];
+	}
+	
+	void traverse() {
+		if (top == -1) {
+			cout << "underflow"; return;
 		}
-		
-		void pop() {
-			if (isempty()) cout << "underflow";
-			else top--;
+		for (int i = top; i >= 0; i--) {
+			cout << arr[i];
 		}
-		
-		void peek() {
-			if (isempty()) cout << "underflow";
-			else cout << arr[top];
+	}
+	
+	void resize(int ncap) {
+		int* narr = new int[ncap];
+		for (int i = 0; i < min(cap, ncap); i++) {
+			narr[i] = arr[i];
 		}
-		
-		void disp() {
-			if (isempty()) cout << "underflow";
-			else {
-				for (int i = top; i >=0; i--) {
-					cout << arr[i];
-				}
-			}
+		for (int i = cap; i < ncap; i++) {
+			narr[i] = 0;
 		}
-		
-		void resize(){
-      intnewCapacity = 2 * capacity;
-      int* newArr = new int[newCapacity];
-      for(int i = 0; i < capacity; i++) {
-          newArr[i] = arr[i];
-      }
-      for(int i = capacity; i < newCapacity; i++) {
-          newArr[i] = 0;
-      }
-      delete[] arr;
-      arr = newArr;
-      capacity = newCapacity;
-    }
-
-		void count(){
-			cout<<top+1; 
-		}
+		delete[] arr;
+		arr = narr;
+		cap = ncap;
+	}
 };
 int main() {
-	stack a(10);
-	a.push(0);
-	a.push(1);
-	a.pop();
-	a.push(2);
-	a.peek();
-	a.disp();
+	stack s(5);
+	s.push(1);
+	s.push(2);
+	s.push(3);
+	s.push(4);
+	s.push(5);
+	s.push(6); // this will cause an overflow, and print "overflow"
+
+	s.pop();
+	s.pop();
+	s.pop();
+	s.pop();
+	s.pop();
+	s.pop(); // this will cause an underflow, and print "underflow"
+
+	s.push(7);
+	s.push(8);
+
+	s.traverse(); // prints "84"
+
+	s.peek(); // prints "8"
+
+	return 0;
 }
